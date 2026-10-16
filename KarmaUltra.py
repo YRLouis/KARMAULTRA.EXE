@@ -31,8 +31,8 @@ import os
 #  VERSION & AUTO-UPDATE
 # ═════════════════════════════════════════════
 
-VERSION = "1.9.42"  # one click push update
-UPDATE_NOTE = "Settings can push this file to GitHub in one click"
+VERSION = "1.9.43"  # auto install updates
+UPDATE_NOTE = "Updates install themselves when GitHub has a newer file"
 UPDATE_URL = "https://raw.githubusercontent.com/YRLouis/KARMAULTRA.EXE/main/KarmaUltra.py"
 UPDATE_EXE_URL = "https://github.com/YRLouis/KARMAULTRA.EXE/releases/latest/download/KarmaUltra.exe"
 
@@ -58,6 +58,8 @@ class Updater:
             r = requests.get(url, timeout=15)
             if r.status_code != 200:
                 return False, VERSION, f"HTTP {r.status_code}"
+            if "<<<<<<<" in r.text:
+                return False, VERSION, "GitHub file has a merge conflict. Push a clean file."
             remote_ver = Updater._extract_version(r.text)
             Updater.last_note = Updater._extract_note(r.text)
             if not remote_ver:
@@ -86,6 +88,8 @@ class Updater:
             if r.status_code != 200:
                 return False, f"Download failed: HTTP {r.status_code}"
             new_code = r.text
+            if "<<<<<<<" in new_code:
+                return False, "Remote file has a merge conflict. Not installing."
             if "VERSION" not in new_code or "def run_gui" not in new_code:
                 return False, "Downloaded file does not look like a valid Karma Ultra script"
             backup = current_path.with_suffix(".py.bak")
