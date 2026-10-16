@@ -31,8 +31,13 @@ import os
 #  VERSION & AUTO-UPDATE
 # ═════════════════════════════════════════════
 
+<<<<<<< HEAD
 VERSION = "1.9.40"  # task country, Ticketmaster NL
 UPDATE_NOTE = "Tasks have a country, and this build runs Ticketmaster NL"
+=======
+VERSION = "1.9.42"  # one click push update
+UPDATE_NOTE = "Settings can push this file to GitHub in one click"
+>>>>>>> 756e9e6962d700663a56dae80b38060cc8d5de44
 UPDATE_URL = "https://raw.githubusercontent.com/YRLouis/KARMAULTRA.EXE/main/KarmaUltra.py"
 UPDATE_EXE_URL = "https://github.com/YRLouis/KARMAULTRA.EXE/releases/latest/download/KarmaUltra.exe"
 
@@ -1693,7 +1698,10 @@ class PurchaseBot:
         self._last_checkout_image = (data or {}).get("image") or ""
         return (data or {}).get("text") or ""
 
+<<<<<<< HEAD
     @staticmethod
+=======
+>>>>>>> 756e9e6962d700663a56dae80b38060cc8d5de44
     async def _where(self, page):
         url = (page.url or "").lower()
         text = (await self._page_text(page) or "").lower()
@@ -1711,13 +1719,20 @@ class PurchaseBot:
             return "map"
         return "event"
 
+<<<<<<< HEAD
+=======
+    @staticmethod
+>>>>>>> 756e9e6962d700663a56dae80b38060cc8d5de44
     def _is_checkout_text(text):
         low = (text or "").lower()
         has_cart = any(w in low for w in ("afrekenen", "checkout", "resterende tijd", "time remaining", "time left"))
         has_total = any(w in low for w in ("totaal", "total", "zitplaatsen", "tickets"))
         return bool(text and has_cart and has_total)
 
+<<<<<<< HEAD
     @staticmethod
+=======
+>>>>>>> 756e9e6962d700663a56dae80b38060cc8d5de44
     def _is_ticket_page(text):
         low = (text or "").lower()
         return any(w in low for w in (
@@ -5389,6 +5404,28 @@ def run_gui():
             app.after(0, lambda: log(f"Update check: {msg}"))
         threading.Thread(target=work, daemon=True).start()
 
+<<<<<<< HEAD
+=======
+    def do_push_update():
+        folder = Path(__file__).resolve().parent
+        update_status.configure(text="Pushing to GitHub…", text_color=YELLOW)
+        def work():
+            try:
+                add = subprocess.run(["git", "add", "KarmaUltra.py"], cwd=folder, capture_output=True, text=True)
+                commit = subprocess.run(["git", "commit", "-m", f"update {VERSION}"], cwd=folder, capture_output=True, text=True)
+                push = subprocess.run(["git", "push"], cwd=folder, capture_output=True, text=True)
+                ok = push.returncode == 0
+                msg = (push.stdout or push.stderr or commit.stderr or "pushed").strip().splitlines()[-1]
+                if add.returncode != 0:
+                    ok = False
+                    msg = (add.stderr or "git add failed").strip()
+            except Exception as e:
+                ok, msg = False, str(e)
+            app.after(0, lambda: update_status.configure(text=msg[:120], text_color=GREEN if ok else RED))
+            app.after(0, lambda: log(f"Push update: {msg}"))
+        threading.Thread(target=work, daemon=True).start()
+
+>>>>>>> 756e9e6962d700663a56dae80b38060cc8d5de44
     def do_install_update():
         url = set_vars["update_url"].get().strip()
         if not messagebox.askyesno("Confirm Update",
@@ -5415,6 +5452,10 @@ def run_gui():
 
     neon_btn(upd_btns, "CHECK", ACCENT, do_check_update, width=100, height=30).pack(side="left", padx=2)
     neon_btn(upd_btns, "INSTALL", GREEN, do_install_update, width=110, height=30).pack(side="left", padx=2)
+<<<<<<< HEAD
+=======
+    neon_btn(upd_btns, "PUSH", ACCENT, do_push_update, width=90, height=30).pack(side="left", padx=2)
+>>>>>>> 756e9e6962d700663a56dae80b38060cc8d5de44
     neon_btn(upd_btns, "RESTART", ORANGE, do_restart, width=100, height=30).pack(side="left", padx=2)
 
     # Discord
